@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-let email = "fohej91686@spruzme.com";
+let email = "cetalif808@ishop2k.com";
 let password = "automationproject";
 let page; //global varaible so no need to be returned and we can use it
 const codeFile=require('./code')
@@ -99,13 +99,80 @@ function waitAndClick(selector, cPage) {
 
 function questionSolver(page, question, answer)
 {
-    return new Promise(function (resolve, reject)
-    {
-        let questionWillBeClickedPromise = question.click()
-        questionWillBeClickedPromise.then(function () {
-            console.log('Question is clicked')
-        })
-    })
+  return new Promise(function (resolve, reject) {
+    let questionWillBeClickedPromise = question.click();
+    questionWillBeClickedPromise
+      .then(function () {
+        // console.log('Question is clicked')
+        let waitForEditor = waitAndClick(
+          ".monaco-editor.no-user-select.vs",
+          page
+        );
+        return waitForEditor;
+      })
+      .then(function () {
+        let customInputClicked = waitAndClick(".checkbox-input", page);
+        return customInputClicked;
+      })
+      .then(function () {
+        return waitAndClick(".input.text-area.custominput.auto-width", page);
+      })
+      .then(function () {
+        return page.type(".input.text-area.custominput.auto-width", answer, {
+          delay: 20,
+        });
+      })
+      .then(function () {
+        let ctrlIsPressedPromise = page.keyboard.down("Control");
+        return ctrlIsPressedPromise;
+      })
+      .then(function () {
+        let AisPressedPromise = page.keyboard.press("A");
+        return AisPressedPromise;
+      })
+      .then(function () {
+        let XisPressedPromise = page.keyboard.press("X");
+        return XisPressedPromise;
+      })
+      .then(function () {
+        let ctrlIsReleased = page.keyboard.up("Control");
+        return ctrlIsReleased;
+      })
+      .then(function () {
+        console.log("Control is released");
+      })
+      .then(function () {
+        let waitForCodeAreaPromise = waitAndClick(
+          ".monaco-editor.no-user-select.vs",
+          page
+        );
+        return waitForCodeAreaPromise;
+      })
+      .then(function () {
+        let ctrlIsPressedPromise = page.keyboard.down("Control");
+        return ctrlIsPressedPromise;
+      })
+      .then(function () {
+        let AisPressedPromise = page.keyboard.press("A");
+        return AisPressedPromise;
+      })
+      .then(function () {
+        let VisPressedPromise = page.keyboard.press("V");
+        return VisPressedPromise;
+      }).then(function () {
+        let ctrlIsReleased = page.keyboard.up("Control");
+        return ctrlIsReleased;
+      }).then(function () {
+        let RunbuttonClickPromise = page.click(' .hr-monaco__run-code',
+          { delay: 50 });
+        return RunbuttonClickPromise
+      }).then(function () {
+        resolve();
+      }).catch(function (err) {
+        console.log(err);
+      });
+  });
+
 }
 
 console.log("After");
